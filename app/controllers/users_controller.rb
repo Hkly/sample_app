@@ -13,6 +13,10 @@ class UsersController < ApplicationController
 
   def new
   	@user = User.new
+    if signed_in?
+      redirect_to root_path
+      flash[:error] = "You are already signed in."
+    end
   end
 
   def create
@@ -40,9 +44,11 @@ class UsersController < ApplicationController
   end
   
   def destroy
-    User.find(params[:id]).destroy
-    flash[:success] = "User deleted."
-    redirect_to users_url
+   # unless User.find(params[:id]) == current_user
+      User.find(params[:id]).destroy
+      flash[:success] = "User deleted."
+      redirect_to users_url
+   # end
   end
 
 

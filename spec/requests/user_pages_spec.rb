@@ -92,7 +92,7 @@ describe "User Pages" do
 				fill_in "Name", with: "Example User"
 				fill_in "Email", with: "user@example.com"
 				fill_in "Password", with: "foobar"
-				fill_in "Confirmation", with: "foobar"
+				fill_in "user_password_confirmation", with: "foobar"
 			end
 
 			describe "after saving the user" do
@@ -131,7 +131,7 @@ describe "User Pages" do
       it { should have_content('error') }
     end
     
-    describe "with valide information" do
+    describe "with valid information" do
       let(:new_name) { "New Name" }
       let(:new_email) { "new@example.com" }
       before do
@@ -147,6 +147,20 @@ describe "User Pages" do
       it { should have_link('Sign out', href: signout_path) }
       specify { expect(user.reload.name).to eq new_name }
       specify { expect(user.reload.email).to eq new_email }
+    end
+    
+    describe "forbidden attributes" do
+      let(:params) do
+        { user: { admin: true, password: user.password,
+                  password_confirmation: user.password } }
+      end
+       
+      before do
+        sign_in user, no_capybara: true
+        patch user_path(user), params
+      end
+      
+      specify { expect(user.reload).not_to be_admin }
     end
   end
   
