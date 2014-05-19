@@ -136,6 +136,11 @@ aside {
   margin-right: 10px;
 }
 
+#count_down{
+	color: $gray;
+	display: inline-block;
+}
+
 /* forms */
 
 input, textarea, select, .uneditable-input {
